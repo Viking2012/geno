@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"sort"
 	"strings"
-
-	"gonum.org/v1/gonum/graph/encoding"
 )
 
 var (
@@ -34,16 +32,6 @@ func NewNode(id int64, labels []string, props map[string]any) (n Node) {
 		Labels:     labels,
 		Properties: props,
 	}
-}
-
-func (n *Node) Attributes() (attrs []encoding.Attribute) {
-	for k, v := range n.Properties {
-		attrs = append(attrs, encoding.Attribute{
-			Key:   k,
-			Value: fmt.Sprintf("%v", v),
-		})
-	}
-	return attrs
 }
 
 func (n *Node) ToCypherMerge(constraints []string) string {
