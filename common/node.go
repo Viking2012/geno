@@ -2,6 +2,7 @@ package common
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 
 	"gonum.org/v1/gonum/graph/encoding"
@@ -48,7 +49,9 @@ func (n *Node) Attributes() (attrs []encoding.Attribute) {
 func (n *Node) ToCypherMerge(constraints []string) string {
 	var (
 		constrainedProps   map[string]any = make(map[string]any)
+		constrainedKeys    []string       // set and sorted later for more stable testing/query generation
 		unconstrainedProps map[string]any = make(map[string]any)
+		unconstrainedKeys  []string       // set and sorted later for more stable testing/query generation
 	)
 
 	for key, val := range n.Properties {
@@ -65,31 +68,108 @@ func (n *Node) ToCypherMerge(constraints []string) string {
 			unconstrainedProps[key] = val
 		}
 	}
+	// saving and sorting the relevant keys ensures that props are listed in alphabetical order
+	// this make no difference in imterpreting the generated cypher command, but it critical for testing
+	constrainedKeys = make([]string, 0, len(constrainedProps))
+	for key := range constrainedProps {
+		constrainedKeys = append(constrainedKeys, key)
+	}
+	sort.Strings(constrainedKeys)
+	unconstrainedKeys = make([]string, 0, len(unconstrainedProps))
+	for key := range unconstrainedProps {
+		unconstrainedKeys = append(unconstrainedKeys, key)
+	}
+	sort.Strings(unconstrainedKeys)
 
+	// initiate the bulding of the query
 	query := strings.Builder{}
-	query.WriteString("MERGE (n {")
+	query.WriteString("MERGE (n {") // first comes the merge statement
+
+	// Constrained properties - keep track of the number writter
 	writtenContraints := 0
-	for key, val := range constrainedProps {
+	for _, key := range constrainedKeys {
+		val := constrainedProps[key]
 		if writtenContraints > 0 {
-			query.WriteString(",")
+			query.WriteString(", ")
 		}
-		query.WriteString(fmt.Sprintf("%s:`%v`", key, val))
+		query.WriteString(fmt.Sprintf("%s:'%v'", key, val))
 		writtenContraints++
 	}
-	query.WriteString("} SET ")
+
+	query.WriteString("}) SET ") // then the properties we will set on the merge (total overwrite of existing properties)
+
+	// Uncontrained properties - keep track of the number written
+	writtenSetTerms := 0
 	if len(n.Labels) != 0 {
 		query.WriteString(fmt.Sprintf("n:%s", strings.Join(n.Labels, ":")))
-		if len(unconstrainedProps) != 0 {
-			query.WriteString(" AND ")
-		}
+		writtenSetTerms++
 	}
-	writtenProps := 0
-	for key, val := range unconstrainedProps {
-		if writtenProps > 0 {
-			query.WriteString(" AND ")
+	for _, key := range unconstrainedKeys {
+		val := unconstrainedProps[key]
+		if writtenSetTerms > 0 {
+			query.WriteString(", ")
 		}
-		query.WriteString(fmt.Sprintf("n.%s = %v", key, val))
+		query.WriteString(fmt.Sprintf("n.%s='%v'", key, val))
+		writtenSetTerms++
 	}
 
+	return query.String()
+}
+
+func (n *Node) ToCypherMatch(constraints []string) string {
+	var (
+		constrainedProps map[string]any = make(map[string]any)
+		constrainedKeys  []string       // set and sort later
+	)
+
+	for key, val := range n.Properties {
+		for _, constrainedKey := range constraints {
+			if key == constrainedKey {
+				constrainedProps[key] = val
+				break
+			}
+		}
+	}
+	constrainedKeys = make([]string, 0, len(constrainedProps))
+	for key := range constrainedProps {
+		constrainedKeys = append(constrainedKeys, key)
+	}
+	sort.Strings(constrainedKeys)
+
+	query := strings.Builder{}
+	query.WriteString(fmt.Sprintf("MATCH (n:%s {", strings.Join(n.Labels, ":")))
+	writtenContraints := 0
+	for _, key := range constrainedKeys {
+		val := constrainedProps[key]
+		if writtenContraints > 0 {
+			query.WriteString(", ")
+		}
+		query.WriteString(fmt.Sprintf("%s:'%v'", key, val))
+		writtenContraints++
+	}
+	query.WriteString("})")
+	return query.String()
+}
+
+func (n *Node) ToCypherCreate() string {
+	var propKeys []string = make([]string, 0, len(n.Properties))
+	for key := range n.Properties {
+		propKeys = append(propKeys, key)
+	}
+	sort.Strings(propKeys)
+
+	query := strings.Builder{}
+	query.WriteString(fmt.Sprintf("CREATE (n:%s {", strings.Join(n.Labels, ":")))
+	writtenContraints := 0
+
+	for _, key := range propKeys {
+		val := n.Properties[key]
+		if writtenContraints > 0 {
+			query.WriteString(", ")
+		}
+		query.WriteString(fmt.Sprintf("%s:'%v'", key, val))
+		writtenContraints++
+	}
+	query.WriteString("})")
 	return query.String()
 }
