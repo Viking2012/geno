@@ -27,14 +27,6 @@ func (n Node) ID() int64 {
 // String prints all labels of a Node in a neo4j format
 func (n Node) String() string { return strings.Join(n.Labels[:], ":") }
 
-// DOTIDD allows Node to have better labels in dot files
-func (n Node) DOTID() string {
-	if len(n.Labels) == 0 {
-		return fmt.Sprintf("%d", n.ID())
-	}
-	return fmt.Sprintf("%s, %d", n.String(), n.ID())
-}
-
 func NewNode(id int64, labels []string, props map[string]any) (n Node) {
 	return Node{
 		Id:         id,
@@ -51,4 +43,53 @@ func (n *Node) Attributes() (attrs []encoding.Attribute) {
 		})
 	}
 	return attrs
+}
+
+func (n *Node) ToCypherMerge(constraints []string) string {
+	var (
+		constrainedProps   map[string]any = make(map[string]any)
+		unconstrainedProps map[string]any = make(map[string]any)
+	)
+
+	for key, val := range n.Properties {
+		var isConstrained bool = false
+		for _, constrainedKey := range constraints {
+			if key == constrainedKey {
+				isConstrained = true
+				break
+			}
+		}
+		if isConstrained {
+			constrainedProps[key] = val
+		} else {
+			unconstrainedProps[key] = val
+		}
+	}
+
+	query := strings.Builder{}
+	query.WriteString("MERGE (n {")
+	writtenContraints := 0
+	for key, val := range constrainedProps {
+		if writtenContraints > 0 {
+			query.WriteString(",")
+		}
+		query.WriteString(fmt.Sprintf("%s:`%v`", key, val))
+		writtenContraints++
+	}
+	query.WriteString("} SET ")
+	if len(n.Labels) != 0 {
+		query.WriteString(fmt.Sprintf("n:%s", strings.Join(n.Labels, ":")))
+		if len(unconstrainedProps) != 0 {
+			query.WriteString(" AND ")
+		}
+	}
+	writtenProps := 0
+	for key, val := range unconstrainedProps {
+		if writtenProps > 0 {
+			query.WriteString(" AND ")
+		}
+		query.WriteString(fmt.Sprintf("n.%s = %v", key, val))
+	}
+
+	return query.String()
 }
