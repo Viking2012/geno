@@ -24,6 +24,7 @@ type cypherTest struct {
 	name         string
 	node         Node
 	constraints  []string
+	paramPrefix  string
 	wantedQuery  string
 	wantedParams map[string]any
 }
@@ -79,7 +80,8 @@ func TestToCypherMerge(t *testing.T) {
 			node:        testNode,
 			constraints: []string{"ConstrainedProp1", "ConstrainedProp2"},
 			wantedQuery: `MERGE (n:TestLabel {ConstrainedProp1:$ConstrainedProp1, ConstrainedProp2:$ConstrainedProp2})
-ON CREATE n.UnconstrainedProp1=$UnconstrainedProp1, n.UnconstrainedProp2=$UnconstrainedProp2`,
+ON CREATE SET n.UnconstrainedProp1=$UnconstrainedProp1, n.UnconstrainedProp2=$UnconstrainedProp2
+`,
 			wantedParams: map[string]any{
 				"ConstrainedProp1":   "ConstrainedValue1",
 				"ConstrainedProp2":   "ConstrainedValue2",
@@ -90,7 +92,7 @@ ON CREATE n.UnconstrainedProp1=$UnconstrainedProp1, n.UnconstrainedProp2=$Uncons
 	}
 
 	for _, tc := range tests {
-		gotQuery, gotParams := testNode.ToCypherMerge([]string{"ConstrainedProp1", "ConstrainedProp2"})
+		gotQuery, gotParams := testNode.ToCypherMerge(tc.constraints, tc.paramPrefix)
 		if tc.wantedQuery != gotQuery {
 			t.Errorf("%s: wanted query \n%s\nbut got \n%s", tc.name, tc.wantedQuery, gotQuery)
 		}
@@ -106,7 +108,7 @@ func TestToCypherMatch(t *testing.T) {
 			name:        "simple test",
 			node:        testNode,
 			constraints: []string{"ConstrainedProp1", "ConstrainedProp2"},
-			wantedQuery: `MATCH (n:TestLabel {ConstrainedProp1:$ConstrainedProp1, ConstrainedProp2:$ConstrainedProp2})`,
+			wantedQuery: "MATCH (n:TestLabel {ConstrainedProp1:$ConstrainedProp1, ConstrainedProp2:$ConstrainedProp2})\n",
 			wantedParams: map[string]any{
 				"ConstrainedProp1": "ConstrainedValue1",
 				"ConstrainedProp2": "ConstrainedValue2",
@@ -115,7 +117,7 @@ func TestToCypherMatch(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		gotQuery, gotParams := testNode.ToCypherMatch([]string{"ConstrainedProp1", "ConstrainedProp2"})
+		gotQuery, gotParams := testNode.ToCypherMatch(tc.constraints, tc.paramPrefix)
 		if tc.wantedQuery != gotQuery {
 			t.Errorf("%s: wanted query \n%s\nbut got \n%s", tc.name, tc.wantedQuery, gotQuery)
 		}
@@ -130,8 +132,7 @@ func TestToCypherCreate(t *testing.T) {
 		{
 			name:        "simple test",
 			node:        testNode,
-			constraints: nil,
-			wantedQuery: `CREATE (n:TestLabel {ConstrainedProp1:$ConstrainedProp1, ConstrainedProp2:$ConstrainedProp2, UnconstrainedProp1:$UnconstrainedProp1, UnconstrainedProp2$UnconstrainedProp2})`,
+			wantedQuery: "CREATE (n:TestLabel {ConstrainedProp1:$ConstrainedProp1, ConstrainedProp2:$ConstrainedProp2, UnconstrainedProp1:$UnconstrainedProp1, UnconstrainedProp2:$UnconstrainedProp2})\n",
 			wantedParams: map[string]any{
 				"ConstrainedProp1":   "ConstrainedValue1",
 				"ConstrainedProp2":   "ConstrainedValue2",
@@ -142,7 +143,7 @@ func TestToCypherCreate(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		gotQuery, gotParams := testNode.ToCypherCreate()
+		gotQuery, gotParams := testNode.ToCypherCreate(tc.paramPrefix)
 		if tc.wantedQuery != gotQuery {
 			t.Errorf("%s: wanted query \n%s\nbut got \n%s", tc.name, tc.wantedQuery, gotQuery)
 		}

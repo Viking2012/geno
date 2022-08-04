@@ -1,7 +1,6 @@
 package common
 
 import (
-	"fmt"
 	"sort"
 	"strings"
 )
@@ -34,14 +33,18 @@ func NewNode(id int64, labels []string, props map[string]any) (n Node) {
 	}
 }
 
-func (n *Node) ToCypherMerge(constraints []string) (query string, params map[string]interface{}) {
+func (n *Node) ToCypherMerge(constraints []string, paramPrefix string) (query string, params map[string]any) {
 	var (
-		constrainedProps   map[string]any = make(map[string]any)
-		constrainedKeys    []string       // set and sorted later for more stable testing/query generation
-		unconstrainedProps map[string]any = make(map[string]any)
-		unconstrainedKeys  []string       // set and sorted later for more stable testing/query generation
+		q                          strings.Builder = strings.Builder{}
+		constrainedProps           map[string]any  = make(map[string]any)
+		constrainedPropsTemplate   []string
+		unconstrainedProps         map[string]any = make(map[string]any)
+		unconstrainedPropsTemplate []string
 	)
+	sort.Strings(constraints)                        // for more stable testing/query generation
+	params = make(map[string]any, len(n.Properties)) // all properties are eventually parameritized
 
+	// segregate constrained props from unconstrained props
 	for key, val := range n.Properties {
 		var isConstrained bool = false
 		for _, constrainedKey := range constraints {
@@ -56,108 +59,99 @@ func (n *Node) ToCypherMerge(constraints []string) (query string, params map[str
 			unconstrainedProps[key] = val
 		}
 	}
-	// saving and sorting the relevant keys ensures that props are listed in alphabetical order
-	// this make no difference in imterpreting the generated cypher command, but it critical for testing
-	constrainedKeys = make([]string, 0, len(constrainedProps))
-	for key := range constrainedProps {
-		constrainedKeys = append(constrainedKeys, key)
+
+	constrainedPropsTemplate = templatizeProps(constrainedProps, ":", paramPrefix)
+	unconstrainedPropsTemplate = templatizeProps(unconstrainedProps, "=", paramPrefix)
+
+	q.WriteString("MERGE (n:")
+	q.WriteString(n.String())
+	if len(constrainedProps) > 0 {
+		q.WriteString(" {")
+		q.WriteString(strings.Join(constrainedPropsTemplate, ", "))
+		q.WriteString("}")
 	}
-	sort.Strings(constrainedKeys)
-	unconstrainedKeys = make([]string, 0, len(unconstrainedProps))
-	for key := range unconstrainedProps {
-		unconstrainedKeys = append(unconstrainedKeys, key)
+	q.WriteString(")")
+	if len(unconstrainedProps) > 0 {
+		q.WriteString("\nON CREATE SET n.")
+		q.WriteString(strings.Join(unconstrainedPropsTemplate, ", n."))
 	}
-	sort.Strings(unconstrainedKeys)
-
-	// initiate the bulding of the query
-	query := strings.Builder{}
-	query.WriteString("MERGE (n {") // first comes the merge statement
-
-	// Constrained properties - keep track of the number writter
-	writtenContraints := 0
-	for _, key := range constrainedKeys {
-		val := constrainedProps[key]
-		if writtenContraints > 0 {
-			query.WriteString(", ")
-		}
-		query.WriteString(fmt.Sprintf("%s:'%v'", key, val))
-		writtenContraints++
-	}
-
-	query.WriteString("}) SET ") // then the properties we will set on the merge (total overwrite of existing properties)
-
-	// Uncontrained properties - keep track of the number written
-	writtenSetTerms := 0
-	if len(n.Labels) != 0 {
-		query.WriteString(fmt.Sprintf("n:%s", strings.Join(n.Labels, ":")))
-		writtenSetTerms++
-	}
-	for _, key := range unconstrainedKeys {
-		val := unconstrainedProps[key]
-		if writtenSetTerms > 0 {
-			query.WriteString(", ")
-		}
-		query.WriteString(fmt.Sprintf("n.%s='%v'", key, val))
-		writtenSetTerms++
-	}
-
-	return query.String()
-}
-
-func (n *Node) ToCypherMatch(constraints []string) (query string, params map[string]interface{}) {
-	var (
-		constrainedProps map[string]any = make(map[string]any)
-		constrainedKeys  []string       // set and sort later
-	)
+	q.WriteString("\n")
 
 	for key, val := range n.Properties {
+		params[paramPrefix+key] = val
+	}
+
+	return q.String(), params
+}
+
+func (n *Node) ToCypherMatch(constraints []string, paramPrefix string) (query string, params map[string]interface{}) {
+	var (
+		q                        strings.Builder = strings.Builder{}
+		constrainedProps         map[string]any  = make(map[string]any)
+		constrainedPropsTemplate []string
+	)
+	sort.Strings(constraints)                        // for more stable testing/query generation
+	params = make(map[string]any, len(n.Properties)) // all properties are eventually parameritized
+
+	// segregate constrained props from unconstrained props
+	for key, val := range n.Properties {
+		var isConstrained bool = false
 		for _, constrainedKey := range constraints {
 			if key == constrainedKey {
-				constrainedProps[key] = val
+				isConstrained = true
 				break
 			}
 		}
-	}
-	constrainedKeys = make([]string, 0, len(constrainedProps))
-	for key := range constrainedProps {
-		constrainedKeys = append(constrainedKeys, key)
-	}
-	sort.Strings(constrainedKeys)
-
-	query := strings.Builder{}
-	query.WriteString(fmt.Sprintf("MATCH (n:%s {", strings.Join(n.Labels, ":")))
-	writtenContraints := 0
-	for _, key := range constrainedKeys {
-		val := constrainedProps[key]
-		if writtenContraints > 0 {
-			query.WriteString(", ")
+		if isConstrained {
+			constrainedProps[key] = val
 		}
-		query.WriteString(fmt.Sprintf("%s:'%v'", key, val))
-		writtenContraints++
 	}
-	query.WriteString("})")
-	return query.String()
+
+	constrainedPropsTemplate = templatizeProps(constrainedProps, ":", paramPrefix)
+
+	q.WriteString("MATCH (n:")
+	q.WriteString(n.String())
+	if len(constrainedProps) > 0 {
+		q.WriteString(" {")
+		q.WriteString(strings.Join(constrainedPropsTemplate, ", "))
+		q.WriteString("}")
+	}
+	q.WriteString(")\n")
+
+	for key, val := range constrainedProps {
+		params[paramPrefix+key] = val
+	}
+
+	return q.String(), params
 }
 
-func (n *Node) ToCypherCreate() (query string, params map[string]interface{}) {
-	var propKeys []string = make([]string, 0, len(n.Properties))
+func (n *Node) ToCypherCreate(paramPrefix string) (query string, params map[string]interface{}) {
+	var (
+		q             strings.Builder = strings.Builder{}
+		propKeys      []string        = make([]string, 0, len(n.Properties))
+		propsTemplate []string
+	)
+	params = make(map[string]any, len(n.Properties)) // all properties are eventually parameritized
+
 	for key := range n.Properties {
 		propKeys = append(propKeys, key)
 	}
 	sort.Strings(propKeys)
 
-	query := strings.Builder{}
-	query.WriteString(fmt.Sprintf("CREATE (n:%s {", strings.Join(n.Labels, ":")))
-	writtenContraints := 0
+	propsTemplate = templatizeProps(n.Properties, ":", paramPrefix)
 
-	for _, key := range propKeys {
-		val := n.Properties[key]
-		if writtenContraints > 0 {
-			query.WriteString(", ")
-		}
-		query.WriteString(fmt.Sprintf("%s:'%v'", key, val))
-		writtenContraints++
+	q.WriteString("CREATE (n:")
+	q.WriteString(n.String())
+	if len(n.Properties) > 0 {
+		q.WriteString(" {")
+		q.WriteString(strings.Join(propsTemplate, ", "))
+		q.WriteString("}")
 	}
-	query.WriteString("})")
-	return query.String()
+	q.WriteString(")\n")
+
+	for key, val := range n.Properties {
+		params[paramPrefix+key] = val
+	}
+
+	return q.String(), params
 }
