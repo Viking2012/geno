@@ -1,14 +1,36 @@
 package common
 
 import (
+	"reflect"
 	"testing"
 )
 
 func Test_interfaceToFloat(t *testing.T) {
-	var want float64 = 1
-	got := interfaceToFloat(int(1))
-	if want != got {
-		t.Error("wanted 1 as a float, but didn't get it")
+	type test struct {
+		value any
+		want  float64
+	}
+	var tests []test = []test{
+		{value: int(1), want: float64(1)},
+		{value: int8(1), want: float64(1)},
+		{value: int16(1), want: float64(1)},
+		{value: int32(1), want: float64(1)},
+		{value: int64(1), want: float64(1)},
+		{value: uint(1), want: float64(1)},
+		{value: uint8(1), want: float64(1)},
+		{value: uint16(1), want: float64(1)},
+		{value: uint32(1), want: float64(1)},
+		{value: uint64(1), want: float64(1)},
+		{value: float32(1), want: float64(1)},
+		{value: float64(1), want: float64(1)},
+		{value: string("0"), want: float64(0)},
+	}
+
+	for _, tc := range tests {
+		got := interfaceToFloat(tc.value)
+		if tc.want != got {
+			t.Errorf("wanted %f as a float, but got %v from a %s ", tc.want, got, reflect.TypeOf(tc.value))
+		}
 	}
 }
 
