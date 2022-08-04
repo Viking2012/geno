@@ -20,6 +20,14 @@ var (
 	}
 )
 
+type cypherTest struct {
+	name         string
+	node         Node
+	constraints  []string
+	wantedQuery  string
+	wantedParams map[string]any
+}
+
 func TestNewNode(t *testing.T) {
 	type test struct {
 		name  string
@@ -65,25 +73,81 @@ func TestNewNode(t *testing.T) {
 }
 
 func TestToCypherMerge(t *testing.T) {
-	want := "MERGE (n {ConstrainedProp1:'ConstrainedValue1', ConstrainedProp2:'ConstrainedValue2'}) SET n:TestLabel, n.UnconstrainedProp1='UnconstrainedValue1', n.UnconstrainedProp2='UnconstrainedValue2'"
-	got := testNode.ToCypherMerge([]string{"ConstrainedProp1", "ConstrainedProp2"})
-	if want != got {
-		t.Errorf("\nWanted: %s\nbut got:%s\n", want, got)
+	tests := []cypherTest{
+		{
+			name:        "simple test",
+			node:        testNode,
+			constraints: []string{"ConstrainedProp1", "ConstrainedProp2"},
+			wantedQuery: `MERGE (n:TestLabel {ConstrainedProp1:$ConstrainedProp1, ConstrainedProp2:$ConstrainedProp2})
+ON CREATE n.UnconstrainedProp1=$UnconstrainedProp1, n.UnconstrainedProp2=$UnconstrainedProp2`,
+			wantedParams: map[string]any{
+				"ConstrainedProp1":   "ConstrainedValue1",
+				"ConstrainedProp2":   "ConstrainedValue2",
+				"UnconstrainedProp1": "UnconstrainedValue1",
+				"UnconstrainedProp2": "UnconstrainedValue2",
+			},
+		},
+	}
+
+	for _, tc := range tests {
+		gotQuery, gotParams := testNode.ToCypherMerge([]string{"ConstrainedProp1", "ConstrainedProp2"})
+		if tc.wantedQuery != gotQuery {
+			t.Errorf("%s: wanted query \n%s\nbut got \n%s", tc.name, tc.wantedQuery, gotQuery)
+		}
+		if !reflect.DeepEqual(tc.wantedParams, gotParams) {
+			t.Errorf("%s: wanted query \n%v\nbut got %v", tc.name, tc.wantedParams, gotParams)
+		}
 	}
 }
 
 func TestToCypherMatch(t *testing.T) {
-	want := "MATCH (n:TestLabel {ConstrainedProp1:'ConstrainedValue1', ConstrainedProp2:'ConstrainedValue2'})"
-	got := testNode.ToCypherMatch([]string{"ConstrainedProp1", "ConstrainedProp2"})
-	if want != got {
-		t.Errorf("\nWanted: %s\nbut got:%s\n", want, got)
+	tests := []cypherTest{
+		{
+			name:        "simple test",
+			node:        testNode,
+			constraints: []string{"ConstrainedProp1", "ConstrainedProp2"},
+			wantedQuery: `MATCH (n:TestLabel {ConstrainedProp1:$ConstrainedProp1, ConstrainedProp2:$ConstrainedProp2})`,
+			wantedParams: map[string]any{
+				"ConstrainedProp1": "ConstrainedValue1",
+				"ConstrainedProp2": "ConstrainedValue2",
+			},
+		},
+	}
+
+	for _, tc := range tests {
+		gotQuery, gotParams := testNode.ToCypherMatch([]string{"ConstrainedProp1", "ConstrainedProp2"})
+		if tc.wantedQuery != gotQuery {
+			t.Errorf("%s: wanted query \n%s\nbut got \n%s", tc.name, tc.wantedQuery, gotQuery)
+		}
+		if !reflect.DeepEqual(tc.wantedParams, gotParams) {
+			t.Errorf("%s: wanted query \n%v\nbut got %v", tc.name, tc.wantedParams, gotParams)
+		}
 	}
 }
 
 func TestToCypherCreate(t *testing.T) {
-	want := "CREATE (n:TestLabel {ConstrainedProp1:'ConstrainedValue1', ConstrainedProp2:'ConstrainedValue2', UnconstrainedProp1:'UnconstrainedValue1', UnconstrainedProp2:'UnconstrainedValue2'})"
-	got := testNode.ToCypherCreate()
-	if want != got {
-		t.Errorf("\nWanted: %s\nbut got:%s\n", want, got)
+	tests := []cypherTest{
+		{
+			name:        "simple test",
+			node:        testNode,
+			constraints: nil,
+			wantedQuery: `CREATE (n:TestLabel {ConstrainedProp1:$ConstrainedProp1, ConstrainedProp2:$ConstrainedProp2, UnconstrainedProp1:$UnconstrainedProp1, UnconstrainedProp2$UnconstrainedProp2})`,
+			wantedParams: map[string]any{
+				"ConstrainedProp1":   "ConstrainedValue1",
+				"ConstrainedProp2":   "ConstrainedValue2",
+				"UnconstrainedProp1": "UnconstrainedValue1",
+				"UnconstrainedProp2": "UnconstrainedValue2",
+			},
+		},
+	}
+
+	for _, tc := range tests {
+		gotQuery, gotParams := testNode.ToCypherCreate()
+		if tc.wantedQuery != gotQuery {
+			t.Errorf("%s: wanted query \n%s\nbut got \n%s", tc.name, tc.wantedQuery, gotQuery)
+		}
+		if !reflect.DeepEqual(tc.wantedParams, gotParams) {
+			t.Errorf("%s: wanted query \n%v\nbut got %v", tc.name, tc.wantedParams, gotParams)
+		}
 	}
 }
