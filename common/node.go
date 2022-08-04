@@ -1,6 +1,7 @@
 package common
 
 import (
+	"fmt"
 	"sort"
 	"strings"
 )
@@ -40,9 +41,15 @@ func (n *Node) ToCypherMerge(constraints []string, paramPrefix string) (query st
 		constrainedPropsTemplate   []string
 		unconstrainedProps         map[string]any = make(map[string]any)
 		unconstrainedPropsTemplate []string
+		nodeVariable               string
 	)
 	sort.Strings(constraints)                        // for more stable testing/query generation
 	params = make(map[string]any, len(n.Properties)) // all properties are eventually parameritized
+	if paramPrefix != "" {
+		nodeVariable = paramPrefix
+	} else {
+		nodeVariable = "n"
+	}
 
 	// segregate constrained props from unconstrained props
 	for key, val := range n.Properties {
@@ -63,7 +70,9 @@ func (n *Node) ToCypherMerge(constraints []string, paramPrefix string) (query st
 	constrainedPropsTemplate = templatizeProps(constrainedProps, ":", paramPrefix)
 	unconstrainedPropsTemplate = templatizeProps(unconstrainedProps, "=", paramPrefix)
 
-	q.WriteString("MERGE (n:")
+	q.WriteString("MERGE (")
+	q.WriteString(nodeVariable) // use the param prefix as the node variable (matters on the relationship side, but not much here)
+	q.WriteString(":")
 	q.WriteString(n.String())
 	if len(constrainedProps) > 0 {
 		q.WriteString(" {")
@@ -72,8 +81,8 @@ func (n *Node) ToCypherMerge(constraints []string, paramPrefix string) (query st
 	}
 	q.WriteString(")")
 	if len(unconstrainedProps) > 0 {
-		q.WriteString("\nON CREATE SET n.")
-		q.WriteString(strings.Join(unconstrainedPropsTemplate, ", n."))
+		q.WriteString(fmt.Sprintf("\nON CREATE SET %s.", nodeVariable))
+		q.WriteString(strings.Join(unconstrainedPropsTemplate, fmt.Sprintf(", %s.", nodeVariable)))
 	}
 	q.WriteString("\n")
 
@@ -89,9 +98,15 @@ func (n *Node) ToCypherMatch(constraints []string, paramPrefix string) (query st
 		q                        strings.Builder = strings.Builder{}
 		constrainedProps         map[string]any  = make(map[string]any)
 		constrainedPropsTemplate []string
+		nodeVariable             string
 	)
 	sort.Strings(constraints)                        // for more stable testing/query generation
 	params = make(map[string]any, len(n.Properties)) // all properties are eventually parameritized
+	if paramPrefix != "" {
+		nodeVariable = paramPrefix
+	} else {
+		nodeVariable = "n"
+	}
 
 	// segregate constrained props from unconstrained props
 	for key, val := range n.Properties {
@@ -109,7 +124,9 @@ func (n *Node) ToCypherMatch(constraints []string, paramPrefix string) (query st
 
 	constrainedPropsTemplate = templatizeProps(constrainedProps, ":", paramPrefix)
 
-	q.WriteString("MATCH (n:")
+	q.WriteString("MATCH (")
+	q.WriteString(nodeVariable)
+	q.WriteString(":")
 	q.WriteString(n.String())
 	if len(constrainedProps) > 0 {
 		q.WriteString(" {")
@@ -130,8 +147,14 @@ func (n *Node) ToCypherCreate(paramPrefix string) (query string, params map[stri
 		q             strings.Builder = strings.Builder{}
 		propKeys      []string        = make([]string, 0, len(n.Properties))
 		propsTemplate []string
+		nodeVariable  string
 	)
 	params = make(map[string]any, len(n.Properties)) // all properties are eventually parameritized
+	if paramPrefix != "" {
+		nodeVariable = paramPrefix
+	} else {
+		nodeVariable = "n"
+	}
 
 	for key := range n.Properties {
 		propKeys = append(propKeys, key)
@@ -140,7 +163,9 @@ func (n *Node) ToCypherCreate(paramPrefix string) (query string, params map[stri
 
 	propsTemplate = templatizeProps(n.Properties, ":", paramPrefix)
 
-	q.WriteString("CREATE (n:")
+	q.WriteString("CREATE (")
+	q.WriteString(nodeVariable)
+	q.WriteString(":")
 	q.WriteString(n.String())
 	if len(n.Properties) > 0 {
 		q.WriteString(" {")
