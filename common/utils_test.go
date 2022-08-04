@@ -69,6 +69,13 @@ func Test_templatizeProps(t *testing.T) {
 			paramPrefix: "left",
 			want:        []string{"Prop1:$leftProp1", "Prop2:$leftProp2", "Prop3:$leftProp3"},
 		},
+		{
+			name:        "props come sorted alphabetically, regardless of initial order",
+			props:       map[string]any{"ZProp": nil, "YProp": nil, "AProp": nil},
+			assignor:    ":",
+			paramPrefix: "_",
+			want:        []string{"AProp:$_AProp", "YProp:$_YProp", "ZProp:$_ZProp"},
+		},
 	}
 
 	for _, tc := range tests {
