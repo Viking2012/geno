@@ -45,25 +45,22 @@ func Test_templatizeProps(t *testing.T) {
 
 	var tests []test = []test{
 		{
-			name:        "simple",
-			props:       map[string]any{"Prop1": nil, "Prop2": nil, "Prop3": nil},
-			assignor:    ":",
-			paramPrefix: "",
-			want:        []string{"Prop1:$Prop1", "Prop2:$Prop2", "Prop3:$Prop3"},
+			name:     "simple",
+			props:    map[string]any{"Prop1": nil, "Prop2": nil, "Prop3": nil},
+			assignor: ":",
+			want:     []string{"Prop1:$Prop1", "Prop2:$Prop2", "Prop3:$Prop3"},
 		},
 		{
-			name:        "with special character",
-			props:       map[string]any{"Prop`1": nil, "Prop`2": nil, "Prop`3": nil},
-			assignor:    ":",
-			paramPrefix: "",
-			want:        []string{"Prop`1:$Prop`1", "Prop`2:$Prop`2", "Prop`3:$Prop`3"},
+			name:     "with special character",
+			props:    map[string]any{"Prop`1": nil, "Prop`2": nil, "Prop`3": nil},
+			assignor: ":",
+			want:     []string{"Prop`1:$Prop`1", "Prop`2:$Prop`2", "Prop`3:$Prop`3"},
 		},
 		{
-			name:        "with complex seperators and assignors",
-			props:       map[string]any{"Prop1": nil, "Prop2": nil, "Prop3": nil},
-			assignor:    "=",
-			paramPrefix: "",
-			want:        []string{"Prop1=$Prop1", "Prop2=$Prop2", "Prop3=$Prop3"},
+			name:     "with complex seperators and assignors",
+			props:    map[string]any{"Prop1": nil, "Prop2": nil, "Prop3": nil},
+			assignor: "=",
+			want:     []string{"Prop1=$Prop1", "Prop2=$Prop2", "Prop3=$Prop3"},
 		},
 		{
 			name:        "simple with prefix",
