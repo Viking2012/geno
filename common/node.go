@@ -34,7 +34,7 @@ func NewNode(id int64, labels []string, props map[string]any) (n Node) {
 	}
 }
 
-func (n *Node) ToCypherMerge(constraints []string) string {
+func (n *Node) ToCypherMerge(constraints []string) (query string, params map[string]interface{}) {
 	var (
 		constrainedProps   map[string]any = make(map[string]any)
 		constrainedKeys    []string       // set and sorted later for more stable testing/query generation
