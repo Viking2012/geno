@@ -68,12 +68,12 @@ func TestNewNode(t *testing.T) {
 	for _, tc := range tests {
 		got := NewNode(tc.id, tc.labs, tc.props)
 		if !reflect.DeepEqual(tc.want, got) {
-			t.Fatalf("%s: expected:%v but got:%v", tc.name, tc.want, got)
+			t.Fatalf("%s: expected\n%v but got\n%v", tc.name, tc.want, got)
 		}
 	}
 }
 
-func TestToCypherMerge(t *testing.T) {
+func TestNodeToCypherMerge(t *testing.T) {
 	tests := []cypherTest{
 		{
 			name:        "simple test",
@@ -89,6 +89,21 @@ ON CREATE SET n.UnconstrainedProp1=$UnconstrainedProp1, n.UnconstrainedProp2=$Un
 				"UnconstrainedProp2": "UnconstrainedValue2",
 			},
 		},
+		{
+			name:        "with prefix",
+			node:        testNode,
+			constraints: []string{"ConstrainedProp1", "ConstrainedProp2"},
+			paramPrefix: "left",
+			wantedQuery: `MERGE (left:TestLabel {ConstrainedProp1:$leftConstrainedProp1, ConstrainedProp2:$leftConstrainedProp2})
+ON CREATE SET left.UnconstrainedProp1=$leftUnconstrainedProp1, left.UnconstrainedProp2=$leftUnconstrainedProp2
+`,
+			wantedParams: map[string]any{
+				"leftConstrainedProp1":   "ConstrainedValue1",
+				"leftConstrainedProp2":   "ConstrainedValue2",
+				"leftUnconstrainedProp1": "UnconstrainedValue1",
+				"leftUnconstrainedProp2": "UnconstrainedValue2",
+			},
+		},
 	}
 
 	for _, tc := range tests {
@@ -97,12 +112,12 @@ ON CREATE SET n.UnconstrainedProp1=$UnconstrainedProp1, n.UnconstrainedProp2=$Un
 			t.Errorf("%s: wanted query \n%s\nbut got \n%s", tc.name, tc.wantedQuery, gotQuery)
 		}
 		if !reflect.DeepEqual(tc.wantedParams, gotParams) {
-			t.Errorf("%s: wanted query \n%v\nbut got %v", tc.name, tc.wantedParams, gotParams)
+			t.Errorf("%s: wanted params \n%v\nbut got \n%v", tc.name, tc.wantedParams, gotParams)
 		}
 	}
 }
 
-func TestToCypherMatch(t *testing.T) {
+func TestNodeToCypherMatch(t *testing.T) {
 	tests := []cypherTest{
 		{
 			name:        "simple test",
@@ -127,7 +142,7 @@ func TestToCypherMatch(t *testing.T) {
 	}
 }
 
-func TestToCypherCreate(t *testing.T) {
+func TestNodeToCypherCreate(t *testing.T) {
 	tests := []cypherTest{
 		{
 			name:        "simple test",
