@@ -1,0 +1,763 @@
+{
+    "nodes": [
+        {
+            "identity": 493321,
+            "labels": [
+                "Customer"
+            ],
+            "properties": {
+                "KUNNR": "0249697900",
+                "Database": "Hybrid_Germany",
+                "Key": "Hybrid_Germany0249697900",
+                "Name": "Hybrid_Germany0249697900",
+                "NAME1": "Hybrid_Germany0249697900",
+                "SPERR": ""
+            }
+        },
+        {
+            "identity": 1566703,
+            "labels": [
+                "Vendor"
+            ],
+            "properties": {
+                "Database": "Hybrid_CH_CH4_300",
+                "LIFNR": "0000501602",
+                "Key": "Hybrid_CH_CH4_3000000501602",
+                "NAME1": "Hybrid_CH_CH4_3000000501602",
+                "SPERR": "X",
+                "Name": "Hybrid_CH_CH4_3000000501602"
+            }
+        },
+        {
+            "identity": 9687915,
+            "labels": [
+                "Bank"
+            ],
+            "properties": {
+                "Value": "Bank9687915"
+            }
+        },
+        {
+            "identity": 1528609,
+            "labels": [
+                "Vendor"
+            ],
+            "properties": {
+                "Database": "Hybrid_CH_CH4_100",
+                "LIFNR": "0000501602",
+                "Key": "Hybrid_CH_CH4_1000000501602",
+                "NAME1": "Hybrid_CH_CH4_1000000501602",
+                "SPERR": "X",
+                "Name": "Hybrid_CH_CH4_1000000501602"
+            }
+        },
+        {
+            "identity": 3218823,
+            "labels": [
+                "Address"
+            ],
+            "properties": {
+                "Value": "Address3218823",
+                "Country": "de"
+            }
+        },
+        {
+            "identity": 9208510,
+            "labels": [
+                "Email"
+            ],
+            "properties": {
+                "Value": "Email9208510@examples.com"
+            }
+        },
+        {
+            "identity": 8800181,
+            "labels": [
+                "Fax"
+            ],
+            "properties": {
+                "Value": "Fax8800181"
+            }
+        },
+        {
+            "identity": 572689,
+            "labels": [
+                "Customer"
+            ],
+            "properties": {
+                "KUNNR": "0804960200",
+                "Database": "Hybrid_Germany",
+                "Key": "Hybrid_Germany0804960200",
+                "Name": "Hybrid_Germany0804960200",
+                "NAME1": "Hybrid_Germany0804960200",
+                "SPERR": ""
+            }
+        },
+        {
+            "identity": 10692759,
+            "labels": [
+                "Vendor"
+            ],
+            "properties": {
+                "Database": "Hybrid_AMSAP",
+                "LIFNR": "0002007138",
+                "Key": "Hybrid_AMSAP0002007138",
+                "Name": "Hybrid_AMSAP0002007138",
+                "NAME1": "Hybrid_AMSAP0002007138",
+                "SPERR": ""
+            }
+        },
+        {
+            "identity": 6601039,
+            "labels": [
+                "GUID"
+            ],
+            "properties": {
+                "Value": "GUID6601039"
+            }
+        },
+        {
+            "identity": 2316137,
+            "labels": [
+                "Vendor"
+            ],
+            "properties": {
+                "Database": "Hybrid_Sweden",
+                "LIFNR": "0000977620",
+                "Key": "Hybrid_Sweden0000977620",
+                "Name": "Hybrid_Sweden0000977620",
+                "NAME1": "Hybrid_Sweden0000977620",
+                "SPERR": "X"
+            }
+        },
+        {
+            "identity": 2053492,
+            "labels": [
+                "Vendor"
+            ],
+            "properties": {
+                "Database": "Hybrid_Italy",
+                "LIFNR": "0000302440",
+                "Key": "Hybrid_Italy0000302440",
+                "Name": "Hybrid_Italy0000302440",
+                "NAME1": "Hybrid_Italy0000302440",
+                "SPERR": "X"
+            }
+        },
+        {
+            "identity": 1928290,
+            "labels": [
+                "Vendor"
+            ],
+            "properties": {
+                "Database": "Hybrid_Germany",
+                "LIFNR": "0841740000",
+                "Key": "Hybrid_Germany0841740000",
+                "Name": "Hybrid_Germany0841740000",
+                "NAME1": "Hybrid_Germany0841740000",
+                "SPERR": ""
+            }
+        },
+        {
+            "identity": 3860913,
+            "labels": [
+                "Vendor"
+            ],
+            "properties": {
+                "Database": "Hybrid_Remsc",
+                "LIFNR": "1300017006",
+                "Key": "Hybrid_Remsc1300017006",
+                "Name": "Hybrid_Remsc1300017006",
+                "NAME1": "Hybrid_Remsc1300017006",
+                "SPERR": ""
+            }
+        },
+        {
+            "identity": 1838994,
+            "labels": [
+                "Vendor"
+            ],
+            "properties": {
+                "Database": "Hybrid_Remsc",
+                "LIFNR": "1300005047",
+                "Key": "Hybrid_Remsc1300005047",
+                "Name": "Hybrid_Remsc1300005047",
+                "NAME1": "Hybrid_Remsc1300005047",
+                "SPERR": ""
+            }
+        },
+        {
+            "identity": 1843217,
+            "labels": [
+                "Vendor"
+            ],
+            "properties": {
+                "Database": "Hybrid_Remsc",
+                "LIFNR": "1300010242",
+                "Key": "Hybrid_Remsc1300010242",
+                "Name": "Hybrid_Remsc1300010242",
+                "NAME1": "Hybrid_Remsc1300010242",
+                "SPERR": ""
+            }
+        },
+        {
+            "identity": 1643072,
+            "labels": [
+                "Vendor"
+            ],
+            "properties": {
+                "Database": "Hybrid_CH_CHP_200",
+                "LIFNR": "0000062789",
+                "Key": "Hybrid_CH_CHP_2000000062789",
+                "Name": "Hybrid_CH_CHP_2000000062789",
+                "NAME1": "Hybrid_CH_CHP_2000000062789",
+                "SPERR": "X"
+            }
+        },
+        {
+            "identity": 3087386,
+            "labels": [
+                "Address"
+            ],
+            "properties": {
+                "Value": "Address3087386",
+                "Country": "ch"
+            }
+        },
+        {
+            "identity": 12976776,
+            "labels": [
+                "Vendor"
+            ],
+            "properties": {
+                "Database": "Hybrid_CZ",
+                "LIFNR": "0000603610",
+                "Key": "Hybrid_CZ0000603610",
+                "Name": "Hybrid_CZ0000603610",
+                "NAME1": "Hybrid_CZ0000603610",
+                "SPERR": "X"
+            }
+        },
+        {
+            "identity": 2866411,
+            "labels": [
+                "Name"
+            ],
+            "properties": {
+                "Field": "Concatenated",
+                "Value": "Name2866411"
+            }
+        },
+        {
+            "identity": 12945046,
+            "labels": [
+                "Vendor"
+            ],
+            "properties": {
+                "Database": "Hybrid_Bulgaria",
+                "LIFNR": "0000940675",
+                "Key": "Hybrid_Bulgaria0000940675",
+                "Name": "Hybrid_Bulgaria0000940675",
+                "NAME1": "Hybrid_Bulgaria0000940675",
+                "SPERR": ""
+            }
+        },
+        {
+            "identity": 1984596,
+            "labels": [
+                "Vendor"
+            ],
+            "properties": {
+                "Database": "Hybrid_Germany",
+                "LIFNR": "BA39290514",
+                "Key": "Hybrid_GermanyBA39290514",
+                "Name": "Hybrid_GermanyBA39290514",
+                "NAME1": "Hybrid_GermanyBA39290514",
+                "SPERR": ""
+            }
+        },
+        {
+            "identity": 1959420,
+            "labels": [
+                "Vendor"
+            ],
+            "properties": {
+                "Database": "Hybrid_Germany",
+                "LIFNR": "BA00002377",
+                "Key": "Hybrid_GermanyBA00002377",
+                "Name": "Hybrid_GermanyBA00002377",
+                "NAME1": "Hybrid_GermanyBA00002377",
+                "SPERR": ""
+            }
+        },
+        {
+            "identity": 1957380,
+            "labels": [
+                "Vendor"
+            ],
+            "properties": {
+                "Database": "Hybrid_Germany",
+                "LIFNR": "BA00001590",
+                "Key": "Hybrid_GermanyBA00001590",
+                "Name": "Hybrid_GermanyBA00001590",
+                "NAME1": "Hybrid_GermanyBA00001590",
+                "SPERR": ""
+            }
+        },
+        {
+            "identity": 1957817,
+            "labels": [
+                "Vendor"
+            ],
+            "properties": {
+                "Database": "Hybrid_Germany",
+                "LIFNR": "BA00001787",
+                "Key": "Hybrid_GermanyBA00001787",
+                "Name": "Hybrid_GermanyBA00001787",
+                "NAME1": "Hybrid_GermanyBA00001787",
+                "SPERR": ""
+            }
+        },
+        {
+            "identity": 1733742,
+            "labels": [
+                "Vendor"
+            ],
+            "properties": {
+                "Database": "Hybrid_CH_Z22_101",
+                "LIFNR": "0000500010",
+                "Key": "Hybrid_CH_Z22_1010000500010",
+                "Name": "Hybrid_CH_Z22_1010000500010",
+                "NAME1": "Hybrid_CH_Z22_1010000500010",
+                "SPERR": ""
+            }
+        },
+        {
+            "identity": 1659897,
+            "labels": [
+                "Vendor"
+            ],
+            "properties": {
+                "Database": "Hybrid_CH_CHP_200",
+                "LIFNR": "0000500010",
+                "Key": "Hybrid_CH_CHP_2000000500010",
+                "Name": "Hybrid_CH_CHP_2000000500010",
+                "NAME1": "Hybrid_CH_CHP_2000000500010",
+                "SPERR": ""
+            }
+        },
+        {
+            "identity": 1644851,
+            "labels": [
+                "Vendor"
+            ],
+            "properties": {
+                "Database": "Hybrid_CH_CHP_200",
+                "LIFNR": "0000066137",
+                "Key": "Hybrid_CH_CHP_2000000066137",
+                "Name": "Hybrid_CH_CHP_2000000066137",
+                "NAME1": "Hybrid_CH_CHP_2000000066137",
+                "SPERR": "X"
+            }
+        },
+        {
+            "identity": 1565128,
+            "labels": [
+                "Vendor"
+            ],
+            "properties": {
+                "Database": "Hybrid_CH_CH4_300",
+                "LIFNR": "0000500010",
+                "Key": "Hybrid_CH_CH4_3000000500010",
+                "Name": "Hybrid_CH_CH4_3000000500010",
+                "NAME1": "Hybrid_CH_CH4_3000000500010",
+                "SPERR": ""
+            }
+        },
+        {
+            "identity": 1527028,
+            "labels": [
+                "Vendor"
+            ],
+            "properties": {
+                "Database": "Hybrid_CH_CH4_100",
+                "LIFNR": "0000500010",
+                "Key": "Hybrid_CH_CH4_1000000500010",
+                "Name": "Hybrid_CH_CH4_1000000500010",
+                "NAME1": "Hybrid_CH_CH4_1000000500010",
+                "SPERR": ""
+            }
+        },
+        {
+            "identity": 2866412,
+            "labels": [
+                "Name"
+            ],
+            "properties": {
+                "Field": "Concatenated",
+                "Value": "Name2866412"
+            }
+        },
+        {
+            "identity": 4545805,
+            "labels": [
+                "Phone"
+            ],
+            "properties": {
+                "Value": "Phone4545805"
+            }
+        }
+    ],
+    "rels": [
+        {
+            "identity": 9978822,
+            "start": 493321,
+            "end": 9687915,
+            "type": "Has_Bank",
+            "properties": {}
+        },
+        {
+            "identity": 9606601,
+            "start": 1566703,
+            "end": 9687915,
+            "type": "Has_Bank",
+            "properties": {}
+        },
+        {
+            "identity": 9574388,
+            "start": 1528609,
+            "end": 9687915,
+            "type": "Has_Bank",
+            "properties": {}
+        },
+        {
+            "identity": 8785367,
+            "start": 493321,
+            "end": 3218823,
+            "type": "Has_Address",
+            "properties": {}
+        },
+        {
+            "identity": 3101080,
+            "start": 1566703,
+            "end": 3218823,
+            "type": "Has_Address",
+            "properties": {}
+        },
+        {
+            "identity": 3055361,
+            "start": 1528609,
+            "end": 3218823,
+            "type": "Has_Address",
+            "properties": {}
+        },
+        {
+            "identity": 5995953,
+            "start": 493321,
+            "end": 9208510,
+            "type": "Has_Email",
+            "properties": {}
+        },
+        {
+            "identity": 4456913,
+            "start": 1528609,
+            "end": 9208510,
+            "type": "Has_Email",
+            "properties": {}
+        },
+        {
+            "identity": 5658692,
+            "start": 493321,
+            "end": 8800181,
+            "type": "Has_Fax",
+            "properties": {}
+        },
+        {
+            "identity": 4180465,
+            "start": 1528609,
+            "end": 8800181,
+            "type": "Has_Fax",
+            "properties": {}
+        },
+        {
+            "identity": 10371980,
+            "start": 572689,
+            "end": 6601039,
+            "type": "Has_GUID",
+            "properties": {}
+        },
+        {
+            "identity": 13341920,
+            "start": 10692759,
+            "end": 6601039,
+            "type": "Has_GUID",
+            "properties": {}
+        },
+        {
+            "identity": 10693686,
+            "start": 2316137,
+            "end": 6601039,
+            "type": "Has_GUID",
+            "properties": {}
+        },
+        {
+            "identity": 10639313,
+            "start": 2053492,
+            "end": 6601039,
+            "type": "Has_GUID",
+            "properties": {}
+        },
+        {
+            "identity": 10604947,
+            "start": 1928290,
+            "end": 6601039,
+            "type": "Has_GUID",
+            "properties": {}
+        },
+        {
+            "identity": 3459581,
+            "start": 3860913,
+            "end": 6601039,
+            "type": "Has_GUID",
+            "properties": {}
+        },
+        {
+            "identity": 3431126,
+            "start": 1838994,
+            "end": 6601039,
+            "type": "Has_GUID",
+            "properties": {}
+        },
+        {
+            "identity": 3439840,
+            "start": 1843217,
+            "end": 6601039,
+            "type": "Has_GUID",
+            "properties": {}
+        },
+        {
+            "identity": 8863359,
+            "start": 572689,
+            "end": 3087386,
+            "type": "Has_Address",
+            "properties": {}
+        },
+        {
+            "identity": 3157083,
+            "start": 1643072,
+            "end": 3087386,
+            "type": "Has_Address",
+            "properties": {}
+        },
+        {
+            "identity": 7326838,
+            "start": 572689,
+            "end": 2866411,
+            "type": "Is_Named",
+            "properties": {}
+        },
+        {
+            "identity": 13601993,
+            "start": 12976776,
+            "end": 2866411,
+            "type": "Is_Named",
+            "properties": {}
+        },
+        {
+            "identity": 13551655,
+            "start": 12945046,
+            "end": 2866411,
+            "type": "Is_Named",
+            "properties": {}
+        },
+        {
+            "identity": 2789198,
+            "start": 2316137,
+            "end": 2866411,
+            "type": "Is_Named",
+            "properties": {}
+        },
+        {
+            "identity": 2538412,
+            "start": 1984596,
+            "end": 2866411,
+            "type": "Is_Named",
+            "properties": {}
+        },
+        {
+            "identity": 2512541,
+            "start": 1959420,
+            "end": 2866411,
+            "type": "Is_Named",
+            "properties": {}
+        },
+        {
+            "identity": 2511194,
+            "start": 1957380,
+            "end": 2866411,
+            "type": "Is_Named",
+            "properties": {}
+        },
+        {
+            "identity": 2511513,
+            "start": 1957817,
+            "end": 2866411,
+            "type": "Is_Named",
+            "properties": {}
+        },
+        {
+            "identity": 2494026,
+            "start": 1928290,
+            "end": 2866411,
+            "type": "Is_Named",
+            "properties": {}
+        },
+        {
+            "identity": 2245773,
+            "start": 1733742,
+            "end": 2866411,
+            "type": "Is_Named",
+            "properties": {}
+        },
+        {
+            "identity": 2140906,
+            "start": 1659897,
+            "end": 2866411,
+            "type": "Is_Named",
+            "properties": {}
+        },
+        {
+            "identity": 2130773,
+            "start": 1643072,
+            "end": 2866411,
+            "type": "Is_Named",
+            "properties": {}
+        },
+        {
+            "identity": 2133827,
+            "start": 1644851,
+            "end": 2866411,
+            "type": "Is_Named",
+            "properties": {}
+        },
+        {
+            "identity": 2035690,
+            "start": 1565128,
+            "end": 2866411,
+            "type": "Is_Named",
+            "properties": {}
+        },
+        {
+            "identity": 1962098,
+            "start": 1527028,
+            "end": 2866411,
+            "type": "Is_Named",
+            "properties": {}
+        },
+        {
+            "identity": 245417,
+            "start": 3860913,
+            "end": 2866411,
+            "type": "Is_Named",
+            "properties": {}
+        },
+        {
+            "identity": 233030,
+            "start": 1838994,
+            "end": 2866411,
+            "type": "Is_Named",
+            "properties": {}
+        },
+        {
+            "identity": 7326839,
+            "start": 572689,
+            "end": 2866412,
+            "type": "Is_Named",
+            "properties": {}
+        },
+        {
+            "identity": 2607656,
+            "start": 2053492,
+            "end": 2866412,
+            "type": "Is_Named",
+            "properties": {}
+        },
+        {
+            "identity": 238325,
+            "start": 1843217,
+            "end": 2866412,
+            "type": "Is_Named",
+            "properties": {}
+        },
+        {
+            "identity": 5168369,
+            "start": 572689,
+            "end": 4545805,
+            "type": "Has_Phone",
+            "properties": {}
+        },
+        {
+            "identity": 13681091,
+            "start": 12976776,
+            "end": 4545805,
+            "type": "Has_Phone",
+            "properties": {}
+        },
+        {
+            "identity": 11283702,
+            "start": 10692759,
+            "end": 4545805,
+            "type": "Has_Phone",
+            "properties": {}
+        },
+        {
+            "identity": 3809431,
+            "start": 1733742,
+            "end": 4545805,
+            "type": "Has_Phone",
+            "properties": {}
+        },
+        {
+            "identity": 3773810,
+            "start": 1644851,
+            "end": 4545805,
+            "type": "Has_Phone",
+            "properties": {}
+        },
+        {
+            "identity": 3778876,
+            "start": 1659897,
+            "end": 4545805,
+            "type": "Has_Phone",
+            "properties": {}
+        },
+        {
+            "identity": 3772019,
+            "start": 1643072,
+            "end": 4545805,
+            "type": "Has_Phone",
+            "properties": {}
+        },
+        {
+            "identity": 3728769,
+            "start": 1565128,
+            "end": 4545805,
+            "type": "Has_Phone",
+            "properties": {}
+        },
+        {
+            "identity": 3713917,
+            "start": 1527028,
+            "end": 4545805,
+            "type": "Has_Phone",
+            "properties": {}
+        },
+        {
+            "identity": 510192,
+            "start": 3860913,
+            "end": 4545805,
+            "type": "Has_Phone",
+            "properties": {}
+        }
+    ]
+}
