@@ -36,7 +36,7 @@ func interfaceToFloat(v any) float64 {
 	}
 }
 
-func templatizeProps(props map[string]any, assignor string) []string {
+func templatizeProps(props map[string]any, assignor, paramPrefix string) []string {
 	var (
 		keys   []string = make([]string, 0, len(props))
 		params []string = make([]string, len(props))
@@ -48,7 +48,7 @@ func templatizeProps(props map[string]any, assignor string) []string {
 	sort.Strings(keys)
 
 	for i, key := range keys {
-		params[i] = fmt.Sprintf("%s%s$%s", key, assignor, key)
+		params[i] = fmt.Sprintf("%s%s$%s", key, assignor, paramPrefix+key)
 	}
 	return params
 }
