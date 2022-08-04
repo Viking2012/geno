@@ -1,5 +1,10 @@
 package common
 
+import (
+	"fmt"
+	"sort"
+)
+
 func interfaceToFloat(v any) float64 {
 	switch t := v.(type) {
 	case int:
@@ -29,4 +34,21 @@ func interfaceToFloat(v any) float64 {
 	default:
 		return 0
 	}
+}
+
+func templatizeProps(props map[string]any, assignor string) []string {
+	var (
+		keys   []string = make([]string, 0, len(props))
+		params []string = make([]string, len(props))
+	)
+
+	for key := range props {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+
+	for i, key := range keys {
+		params[i] = fmt.Sprintf("%s%s$%s", key, assignor, key)
+	}
+	return params
 }
