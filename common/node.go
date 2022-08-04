@@ -104,7 +104,7 @@ func (n *Node) ToCypherMerge(constraints []string) (query string, params map[str
 	return query.String()
 }
 
-func (n *Node) ToCypherMatch(constraints []string) string {
+func (n *Node) ToCypherMatch(constraints []string) (query string, params map[string]interface{}) {
 	var (
 		constrainedProps map[string]any = make(map[string]any)
 		constrainedKeys  []string       // set and sort later
@@ -139,7 +139,7 @@ func (n *Node) ToCypherMatch(constraints []string) string {
 	return query.String()
 }
 
-func (n *Node) ToCypherCreate() string {
+func (n *Node) ToCypherCreate() (query string, params map[string]interface{}) {
 	var propKeys []string = make([]string, 0, len(n.Properties))
 	for key := range n.Properties {
 		propKeys = append(propKeys, key)
