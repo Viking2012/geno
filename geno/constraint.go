@@ -216,7 +216,7 @@ func (constraints *Constraints) GetConstraintsFor(n Node) []string {
 	return allConstraints
 }
 
-func BuildConstraints(driver neo4j.Driver, database string) (Constraints, error) {
+func ReadConstraints(driver neo4j.Driver, database string) (Constraints, error) {
 	session := driver.NewSession(neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead, DatabaseName: database})
 	defer session.Close()
 
