@@ -1,0 +1,45 @@
+{
+    "server": "localhost:7687",
+    "database": "geno",
+    "username": "geno",
+    "constraints": {
+      "geno": {
+        "NodeUniqueness": [
+          {"Address": ["Value"]},
+          {"Bank": ["Value"]},
+          {"Customer": ["Key"]},
+          {"Email": ["Value"]},
+          {"Fax": ["Value"]},
+          {"GUID": ["Value"]},
+          {"Name": ["Value"]},
+          {"Phone": ["Value"]},
+          {"TaxCode": ["Value"]},
+          {"Vendor": ["Key"]}
+        ],
+        "NodeKeys": null,
+        "NodePropertyExistence": null,
+        "RelationshipUniqueness": null,
+        "RelationshipKeys": null,
+        "RelationshipPropertyExistence": null
+      },
+      "test": {
+        "NodeUniqueness": [
+          {"Address": ["Value"]},
+          {"Bank": ["Value"]},
+          {"Customer": ["Key"]},
+          {"Email": ["Value"]},
+          {"Fax": ["Value"]},
+          {"GUID": ["Value"]},
+          {"Name": ["Value"]},
+          {"Phone": ["Value"]},
+          {"TaxCode": ["Value"]},
+          {"Vendor": ["Key"]}
+        ],
+        "NodeKeys": null,
+        "NodePropertyExistence": null,
+        "RelationshipUniqueness": null,
+        "RelationshipKeys": null,
+        "RelationshipPropertyExistence": null
+      }
+    }
+  }

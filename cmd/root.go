@@ -34,13 +34,15 @@ var cfgFile string
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "geno",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Short: "Import and export subgraphs from neo4j",
+	Long: `An import and export CLI for use with neo4j instances.
+This CLI can import data from the following formats:
+- cypher strings (geno import)
+- json files (geno import json)
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+or export data from a query to
+- cypher strings to stdOut (geno export)
+- json (geno export json)`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
@@ -62,7 +64,7 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.geno.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.geno.json)")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -81,7 +83,7 @@ func initConfig() {
 
 		// Search config in home directory with name ".geno" (without extension).
 		viper.AddConfigPath(home)
-		viper.SetConfigType("yaml")
+		viper.SetConfigType("json")
 		viper.SetConfigName(".geno")
 	}
 

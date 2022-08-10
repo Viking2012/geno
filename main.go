@@ -21,8 +21,20 @@ THE SOFTWARE.
 */
 package main
 
-import "github.com/Viking2012/geno/cmd"
+import (
+	"github.com/Viking2012/geno/pkg"
+)
 
 func main() {
-	cmd.Execute()
+	// as a CLI, this will ultimately be the only command within the application that runs
+	// cmd.Execute()
+
+	err := pkg.ImportJson("localhost:7687", "geno", "geno", "genopw", "./test/test.json")
+	if err != nil {
+		panic(err)
+	}
+
+	// session := driver.NewSession(neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead, DatabaseName: database})
+	// defer session.Close()
+
 }

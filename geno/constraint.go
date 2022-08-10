@@ -13,9 +13,11 @@ type EntityType string
 type ConstraintType string
 
 const (
-	IS_NODE                         EntityType     = "NODE"
-	IS_RELATIONSHIP                 EntityType     = "RELATIONSHIP"
-	UNKNOWN_ENTITY                  EntityType     = "_"
+	// Entity Types
+	IS_NODE         EntityType = "NODE"
+	IS_RELATIONSHIP EntityType = "RELATIONSHIP"
+	UNKNOWN_ENTITY  EntityType = "_"
+	// Constraint Types
 	NODE_UNIQUE_CONSTRAINT          ConstraintType = "UNIQUENESS"
 	NODE_KEY_CONSTRAINT             ConstraintType = "NODE_KEY"
 	NODE_PROPERTY_EXISTS_CONSTRAINT ConstraintType = "NODE_PROPERTY_EXISTENCE"
