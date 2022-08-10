@@ -275,7 +275,7 @@ func (constraints *Constraints) GetRelationshipConstraints(r *Relationship) []st
 	return allConstraints
 }
 
-func ReadConstraints(driver neo4j.Driver, database string) (Constraints, error) {
+func GetConstraintsFromDb(driver neo4j.Driver, database string) (Constraints, error) {
 	session := driver.NewSession(neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead, DatabaseName: database})
 	defer session.Close()
 
