@@ -9,6 +9,17 @@ import (
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j/db"
 )
 
+const (
+	IS_NODE                         string = "NODE"
+	IS_RELATIONSHIP                 string = "RELATIONSHIP"
+	NODE_UNIQUE_CONSTRAINT          string = "UNIQUENESS"
+	NODE_KEY_CONSTRAINT             string = "NODE_KEY"
+	NODE_PROPERTY_EXISTS_CONSTRAINT string = "NODE_PROPERTY_EXISTENCE"
+	REL_UNIQUE_CONSTRAINT           string = "RELATIONSHIP_UNIQUENESS"
+	REL_KEY_CONSTRAINT              string = "RELATIONSHIP_KEY"
+	REL_PROPERTY_EXISTS_CONSTRAINT  string = "RELATIONSHIP_PROPERTY_EXISTENCE"
+)
+
 type Constraint struct {
 	Label      string
 	Properties []string
@@ -18,17 +29,35 @@ type Constraints struct {
 	NodeUniqueness                []Constraint
 	NodeKeys                      []Constraint
 	NodePropertyExistence         []Constraint
+	RelationshipUniqueness        []Constraint
+	RelationshipKeys              []Constraint
 	RelationshipPropertyExistence []Constraint
 }
 
+func (c *Constraints) AddConstraint(entityType, constraintType string, newConstraint Constraint) {
+	if entityType == IS_NODE {
+		switch constraintType {
+		case NODE_UNIQUE_CONSTRAINT:
+			c.NodeUniqueness = append(c.NodeUniqueness, newConstraint)
+		case NODE_KEY_CONSTRAINT:
+			c.NodeKeys = append(c.NodeKeys, newConstraint)
+		case NODE_PROPERTY_EXISTS_CONSTRAINT:
+			c.NodePropertyExistence = append(c.NodePropertyExistence, newConstraint)
+		}
+	} else if entityType == IS_RELATIONSHIP {
+		switch constraintType {
+		case REL_UNIQUE_CONSTRAINT:
+			c.RelationshipUniqueness = append(c.RelationshipUniqueness, newConstraint)
+		case REL_KEY_CONSTRAINT:
+			c.RelationshipKeys = append(c.RelationshipKeys, newConstraint)
+		case REL_PROPERTY_EXISTS_CONSTRAINT:
+			c.RelationshipPropertyExistence = append(c.RelationshipPropertyExistence, newConstraint)
+		}
+	}
+}
+
 func ConstraintsFromRecords(records []*db.Record) (Constraints, error) {
-	var (
-		c         Constraints
-		uniques   []Constraint = make([]Constraint, 0)
-		keys      []Constraint = make([]Constraint, 0)
-		nodeProps []Constraint = make([]Constraint, 0)
-		relProps  []Constraint = make([]Constraint, 0)
-	)
+	var c Constraints
 
 	for _, record := range records {
 		var (
@@ -97,28 +126,9 @@ func ConstraintsFromRecords(records []*db.Record) (Constraints, error) {
 
 		for _, label := range labelOrTypes {
 			var newConstraint Constraint = Constraint{Label: label, Properties: properties}
-			if entityType == "NODE" {
-				switch constraintType {
-				case "UNIQUENESS":
-					uniques = append(uniques, newConstraint)
-				case "NODE_KEY":
-					keys = append(keys, newConstraint)
-				case "NODE_PROPERTY_EXISTENCE":
-					nodeProps = append(nodeProps, newConstraint)
-				}
-			} else {
-				relProps = append(relProps, newConstraint)
-			}
-
+			c.AddConstraint(entityType, constraintType, newConstraint)
 		}
 
-	}
-
-	c = Constraints{
-		NodeUniqueness:                uniques,
-		NodeKeys:                      keys,
-		NodePropertyExistence:         nodeProps,
-		RelationshipPropertyExistence: relProps,
 	}
 
 	return c, nil
@@ -179,7 +189,7 @@ func (c *Constraints) String() string {
 	return ret.String()
 }
 
-func (constraints *Constraints) GetConstraintsFor(n Node) []string {
+func (constraints *Constraints) GetNodeConstraints(n *Node) []string {
 	var (
 		reducer        map[string]byte = make(map[string]byte)
 		allConstraints []string
@@ -205,6 +215,41 @@ func (constraints *Constraints) GetConstraintsFor(n Node) []string {
 				for _, p := range c.Properties {
 					reducer[p] = 1
 				}
+			}
+		}
+	}
+
+	for key := range reducer {
+		allConstraints = append(allConstraints, key)
+	}
+
+	return allConstraints
+}
+
+func (constraints *Constraints) GetRelationshipConstraints(r *Relationship) []string {
+	var (
+		reducer        map[string]byte = make(map[string]byte)
+		allConstraints []string
+	)
+
+	for _, c := range constraints.RelationshipKeys {
+		if c.Label == r.Label {
+			for _, p := range c.Properties {
+				reducer[p] = 1
+			}
+		}
+	}
+	for _, c := range constraints.RelationshipPropertyExistence {
+		if c.Label == r.Label {
+			for _, p := range c.Properties {
+				reducer[p] = 1
+			}
+		}
+	}
+	for _, c := range constraints.RelationshipUniqueness {
+		if c.Label == r.Label {
+			for _, p := range c.Properties {
+				reducer[p] = 1
 			}
 		}
 	}
