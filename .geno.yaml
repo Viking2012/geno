@@ -1,0 +1,69 @@
+---
+server: localhost:7687
+database: geno
+username: geno
+constraints:
+    # Example of constraints for a database
+    # -------------------------------------
+    # DatabaseName
+    #     Constraint Type:
+    #         - Label: Node Label
+    #           Properties:
+    #             - Property 1 required for uniqueness of exmaple node label
+    #             - Property 2 required for uniqueness of exmaple node label
+    #             - ... as many as required
+    #     NodePropertyExistence:
+    #         - Label:
+    #           Properties:
+    #     RelationshipUniqueness:
+    #         - Label:
+    #           Properties:
+    #     RelationshipKeys:
+    #         - Label:
+    #           Properties:
+    #     RelationshipPropertyExistence:
+    #         - Label:
+    #           Properties:
+    geno:
+        NodeUniqueness:
+            - Label: Address
+              Properties:
+                  - Value
+            - Label: Bank
+              Properties:
+                  - Value
+            - Label: Customer
+              Properties:
+                  - Key
+            - Label: Email
+              Properties:
+                  - Value
+            - Label: Fax
+              Properties:
+                  - Value
+            - Label: GUID
+              Properties:
+                  - Value
+            - Label: Name
+              Properties:
+                  - Value
+            - Label: Phone
+              Properties:
+                  - Value
+            - Label: TaxCode
+              Properties:
+                  - Value
+            - Label: Vendor
+              Properties:
+                  - Key
+        NodeKeys:
+            - Customer:
+                  - Database
+                  - KUNNR
+            - Vendor:
+                  - Database
+                  - LIFNR
+        NodePropertyExistence:
+        RelationshipUniqueness:
+        RelationshipKeys:
+        RelationshipPropertyExistence:
