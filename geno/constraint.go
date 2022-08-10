@@ -9,15 +9,19 @@ import (
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j/db"
 )
 
+type EntityType string
+type ConstraintType string
+
 const (
-	IS_NODE                         string = "NODE"
-	IS_RELATIONSHIP                 string = "RELATIONSHIP"
-	NODE_UNIQUE_CONSTRAINT          string = "UNIQUENESS"
-	NODE_KEY_CONSTRAINT             string = "NODE_KEY"
-	NODE_PROPERTY_EXISTS_CONSTRAINT string = "NODE_PROPERTY_EXISTENCE"
-	REL_UNIQUE_CONSTRAINT           string = "RELATIONSHIP_UNIQUENESS"
-	REL_KEY_CONSTRAINT              string = "RELATIONSHIP_KEY"
-	REL_PROPERTY_EXISTS_CONSTRAINT  string = "RELATIONSHIP_PROPERTY_EXISTENCE"
+	IS_NODE                         EntityType     = "NODE"
+	IS_RELATIONSHIP                 EntityType     = "RELATIONSHIP"
+	UNKNOWN_ENTITY                  EntityType     = "_"
+	NODE_UNIQUE_CONSTRAINT          ConstraintType = "UNIQUENESS"
+	NODE_KEY_CONSTRAINT             ConstraintType = "NODE_KEY"
+	NODE_PROPERTY_EXISTS_CONSTRAINT ConstraintType = "NODE_PROPERTY_EXISTENCE"
+	REL_UNIQUE_CONSTRAINT           ConstraintType = "RELATIONSHIP_UNIQUENESS"
+	REL_KEY_CONSTRAINT              ConstraintType = "RELATIONSHIP_KEY"
+	REL_PROPERTY_EXISTS_CONSTRAINT  ConstraintType = "RELATIONSHIP_PROPERTY_EXISTENCE"
 )
 
 type Constraint struct {
@@ -34,8 +38,9 @@ type Constraints struct {
 	RelationshipPropertyExistence []Constraint
 }
 
-func (c *Constraints) AddConstraint(entityType, constraintType string, newConstraint Constraint) {
-	if entityType == IS_NODE {
+func (c *Constraints) AddConstraint(entityType EntityType, constraintType ConstraintType, newConstraint Constraint) error {
+	switch entityType {
+	case IS_NODE:
 		switch constraintType {
 		case NODE_UNIQUE_CONSTRAINT:
 			c.NodeUniqueness = append(c.NodeUniqueness, newConstraint)
@@ -43,8 +48,10 @@ func (c *Constraints) AddConstraint(entityType, constraintType string, newConstr
 			c.NodeKeys = append(c.NodeKeys, newConstraint)
 		case NODE_PROPERTY_EXISTS_CONSTRAINT:
 			c.NodePropertyExistence = append(c.NodePropertyExistence, newConstraint)
+		default:
+			return fmt.Errorf("node constraint type %s could not be added as a constraint", constraintType)
 		}
-	} else if entityType == IS_RELATIONSHIP {
+	case IS_RELATIONSHIP:
 		switch constraintType {
 		case REL_UNIQUE_CONSTRAINT:
 			c.RelationshipUniqueness = append(c.RelationshipUniqueness, newConstraint)
@@ -52,8 +59,13 @@ func (c *Constraints) AddConstraint(entityType, constraintType string, newConstr
 			c.RelationshipKeys = append(c.RelationshipKeys, newConstraint)
 		case REL_PROPERTY_EXISTS_CONSTRAINT:
 			c.RelationshipPropertyExistence = append(c.RelationshipPropertyExistence, newConstraint)
+		default:
+			return fmt.Errorf("relationship constraint type %s could not be added as a constraint", constraintType)
 		}
+	case UNKNOWN_ENTITY:
+		return fmt.Errorf("entity type %s could not be added as a constraint", entityType)
 	}
+	return nil
 }
 
 func ConstraintsFromRecords(records []*db.Record) (Constraints, error) {
@@ -126,7 +138,7 @@ func ConstraintsFromRecords(records []*db.Record) (Constraints, error) {
 
 		for _, label := range labelOrTypes {
 			var newConstraint Constraint = Constraint{Label: label, Properties: properties}
-			c.AddConstraint(entityType, constraintType, newConstraint)
+			c.AddConstraint(EntityType(entityType), ConstraintType(constraintType), newConstraint)
 		}
 
 	}
