@@ -36,13 +36,7 @@ var rootCmd = &cobra.Command{
 	Use:   "geno",
 	Short: "Import and export subgraphs from neo4j",
 	Long: `An import and export CLI for use with neo4j instances.
-This CLI can import data from the following formats:
-- cypher strings (geno import)
-- json files (geno import json)
-
-or export data from a query to
-- cypher strings to stdOut (geno export)
-- json (geno export json)`,
+This CLI can import and export data from json, yaml, and raw cypher queries`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
@@ -51,6 +45,8 @@ or export data from a query to
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
+	fmt.Println("Hello from Execute()")
+
 	err := rootCmd.Execute()
 	if err != nil {
 		os.Exit(1)
