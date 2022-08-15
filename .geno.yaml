@@ -8,7 +8,7 @@ constraints:
     # DatabaseName
     #     Constraint Type:
     #         - Label: Node Label
-    #           Properties:
+    #           Properties: $ !important: note no dash here
     #             - Property 1 required for uniqueness of exmaple node label
     #             - Property 2 required for uniqueness of exmaple node label
     #             - ... as many as required
