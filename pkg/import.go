@@ -36,15 +36,15 @@ func ImportJson(uri, database, username, password, filepath string) error {
 	}
 	defer driver.Close()
 
-	var nodeConstraints geno.Constraints
-	nodeConstraints, err = driver.GetConstraints(database)
+	var constraints geno.Constraints
+	constraints, err = driver.GetConstraints(database)
 	fmt.Println("CONSTRAINTS")
-	fmt.Println(nodeConstraints)
+	fmt.Println(constraints)
 	if err != nil {
 		return err
 	}
 
-	var query geno.Query = geno.NewQuery(&driver, &nodeConstraints)
+	var query geno.Query = geno.NewQuery(&driver, &constraints)
 
 	for _, node := range graph.Nodes {
 		summary, err := query.MergeNode(database, node)
