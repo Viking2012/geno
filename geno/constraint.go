@@ -27,8 +27,8 @@ const (
 )
 
 type Constraint struct {
-	Label      string
-	Properties []string
+	Label      string   `json:"Label" yaml:"Label"`
+	Properties []string `json:"Properties" yaml:"Properties"`
 }
 
 type Constraints struct {
