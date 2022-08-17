@@ -81,7 +81,7 @@ func TestGetGraphFromJson(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		got, err := getGraphFromJson([]byte(tc.jsonString))
+		got, err := GetGraphFromJson([]byte(tc.jsonString))
 		if err != nil {
 			t.Error(err)
 		}

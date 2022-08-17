@@ -19,13 +19,13 @@ func findNodeById(id int64, nodes []geno.Node) (geno.Node, error) {
 
 func ImportJson(uri, database, username, password, filepath string) error {
 	// raw, err := os.ReadFile(path.Join("test_data", "test.json"))
-	var graph graph
+	var graph Graph
 
 	raw, err := os.ReadFile(filepath)
 	if err != nil {
 		return err
 	}
-	graph, err = getGraphFromJson(raw)
+	graph, err = GetGraphFromJson(raw)
 	if err != nil {
 		return err
 	}
