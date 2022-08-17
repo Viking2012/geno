@@ -24,12 +24,12 @@ type readGraph struct {
 	Rels  []readRelationship `json:"rels"`
 }
 
-type graph struct {
+type Graph struct {
 	Nodes         []geno.Node
 	Relationships []geno.Relationship
 }
 
-func getGraphFromJson(raw []byte) (g graph, err error) {
+func GetGraphFromJson(raw []byte) (g Graph, err error) {
 	var js readGraph
 
 	if err := json.Unmarshal(raw, &js); err != nil {
