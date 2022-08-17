@@ -1,7 +1,7 @@
 ---
 server: localhost:7687
 database: geno
-username: geno
+user: geno
 constraints:
     # Example of constraints for a database
     # -------------------------------------
