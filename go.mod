@@ -6,6 +6,7 @@ require (
 	github.com/neo4j/neo4j-go-driver/v4 v4.4.4
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/viper v1.12.0
+	golang.org/x/term v0.0.0-20201126162022-7de9c90e9dd1
 )
 
 require (
