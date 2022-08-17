@@ -59,13 +59,6 @@ The file must be in the format:
 	]
 }`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		// DELETE WHEN OUT OF DEV
-		fmt.Println("Server", cfg.Server)
-		fmt.Println("Database", cfg.Database)
-		fmt.Println("Username", cfg.User)
-		fmt.Println("Password", cfg.GetPassword())
-		// Stop Delete HERE
-
 		if fPath == "" {
 			return errors.New("filepath cannot be empty")
 		}
@@ -91,13 +84,6 @@ The file must be in the format:
 		} else {
 			constraints = cfg.Constraints[cfg.Database]
 		}
-		fmt.Println("using constraints:")
-		fmt.Println("\t node uniques:", constraints.NodeUniqueness)
-		fmt.Println("\t node    keys:", constraints.NodeKeys)
-		fmt.Println("\t node   props:", constraints.NodePropertyExistence)
-		fmt.Println("\t rel  uniques:", constraints.RelationshipUniqueness)
-		fmt.Println("\t rel     keys:", constraints.RelationshipKeys)
-		fmt.Println("\t rel    props:", constraints.RelationshipPropertyExistence)
 
 		query = geno.NewQuery(&driver, &constraints)
 
