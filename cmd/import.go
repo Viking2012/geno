@@ -57,9 +57,9 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// importCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	importCmd.Flags().StringVarP(&cfg.Database, "database", "d", cfg.Database, "Insert records into this database")
+	importCmd.PersistentFlags().StringVarP(&cfg.Database, "database", "d", cfg.Database, "Insert records into this database")
 
-	importCmd.Flags().StringVarP(&cfg.Server, "server", "s", cfg.Server, "Location of database in format: <SERVER>:<PORT>")
+	importCmd.PersistentFlags().StringVarP(&cfg.Server, "server", "s", cfg.Server, "Location of database in format: <SERVER>:<PORT>")
 
-	importCmd.Flags().StringVarP(&cfg.Username, "username", "u", cfg.Username, "Username used to connect to the server")
+	importCmd.PersistentFlags().StringVarP(&cfg.User, "username", "u", cfg.User, "Username used to connect to the server")
 }
