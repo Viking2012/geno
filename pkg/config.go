@@ -3,9 +3,18 @@ package pkg
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"regexp"
+	"syscall"
 
 	"github.com/Viking2012/geno/geno"
+	"golang.org/x/term"
+)
+
+var (
+	errServerMisconfig   error = errors.New("configured server must ccontain an ip address and a port number, seperated by a color")
+	errDatabaseMisconfig error = errors.New("configured database must obey neo4j naming conventions")
+	errUsernameMisconfig error = errors.New("configured username must obey neo4j naming conventions")
 )
 
 type Configuration struct {
@@ -52,21 +61,64 @@ func ConfigFromBytes(raw []byte) (cfg Configuration, err error) {
 
 // ValidateServer ensures that a server and port have been provided
 func (cfg *Configuration) ValidateServer() error {
-	var err error = errors.New("configured server must ccontain an ip address and a port number, seperated by a color")
-
 	if cfg.Server == "" {
-		return err
+		return errServerMisconfig
 	}
-	matched, _ := regexp.MatchString(":", cfg.Server)
+	matched, _ := regexp.MatchString(`\:`, cfg.Server)
 	if !matched {
-		return err
+		return errServerMisconfig
 	}
 	return nil
 }
-func (cfg *Configuration) ValidateDatabase() error { return nil }
-func (cfg *Configuration) ValidateUsername() error { return nil }
-func (cfg *Configuration) SetPassword(p string)    { cfg.password = p }
-func (cfg *Configuration) GetPassword() string     { return cfg.password }
+
+// ValidateDatabase checks for all of the rules outlined in:
+// https://neo4j.com/docs/operations-manual/current/manage-databases/configuration/
+func (cfg *Configuration) ValidateDatabase() error {
+	var (
+		matched bool
+		err     error
+	)
+	if len(cfg.Database) > 63 {
+		return errDatabaseMisconfig
+	}
+	if len(cfg.Database) < 3 {
+		return errDatabaseMisconfig
+	}
+	matched, err = regexp.MatchString(`^[[:alnum:]]`, cfg.Database) // should match
+	if err != nil || !matched {
+		return errDatabaseMisconfig
+	}
+	matched, err = regexp.MatchString(`[^a-zA-Z0-9.-]`, cfg.Database) // should not match
+	if err != nil || matched {
+		return errDatabaseMisconfig
+	}
+	matched, err = regexp.MatchString(`^_`, cfg.Database) // should not match
+	if err != nil || matched {
+		return errDatabaseMisconfig
+	}
+	return nil
+}
+func (cfg *Configuration) ValidateUsername() error {
+	var (
+		matched bool
+		err     error
+	)
+	matched, err = regexp.MatchString(`^[[:alnum:]]`, cfg.Username) // should match
+	if err != nil || !matched {
+		return errUsernameMisconfig
+	}
+	matched, err = regexp.MatchString(`[^a-zA-Z0-9.-]`, cfg.Username) // should not match
+	if err != nil || matched {
+		return errUsernameMisconfig
+	}
+	matched, err = regexp.MatchString(`^_`, cfg.Username) // should not match
+	if err != nil || matched {
+		return errUsernameMisconfig
+	}
+	return nil
+}
+func (cfg *Configuration) SetPassword(p string) { cfg.password = p }
+func (cfg *Configuration) GetPassword() string  { return cfg.password }
 
 // Validate ensures that all required configuration values are present and in the correct format
 func (cfg *Configuration) Validate() error {
@@ -83,5 +135,65 @@ func (cfg *Configuration) Validate() error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func (cfg *Configuration) ValidateWithAttempts() error {
+	var triedToGetUsername bool = false
+	var triedToGetPassword bool = false
+	if cfg.Database == "" {
+		return errors.New("database name must be provided either via a configuration file (--config) or via the database flag (-d, --database)")
+	}
+	if cfg.Server == "" {
+		return errors.New("server location must be provided either via a configuration file (--config) or via the server flag (-s, --server)")
+	}
+	for cfg.Username == "" {
+		if !triedToGetUsername {
+			triedToGetUsername = true
+			fmt.Println("Username cannot be blank. Set it below, via a configuration file (--config) or via the username flag (-u, --uesrname)")
+			err := askUsername(cfg)
+			if err != nil {
+				fmt.Println("Username could not be set!")
+				askUsername(cfg)
+			}
+		} else {
+			return errors.New("username could not be set and cannot be blank. Set it via a configuration file (--config) or via the username flag (-u, --uesrname)")
+		}
+	}
+	for cfg.GetPassword() == "" {
+		if !triedToGetPassword {
+			triedToGetPassword = true
+			fmt.Println("Password cannot be blank. Set it below")
+			err := askPassword(cfg)
+			if err != nil {
+				fmt.Println("Password could not be set!")
+				askPassword(cfg)
+			}
+		} else {
+			return errors.New("password could not be set and cannot be blank")
+		}
+	}
+	return nil
+}
+
+func askUsername(cfg *Configuration) error {
+	fmt.Print("Enter Username: ")
+	bytePassword, err := term.ReadPassword(int(syscall.Stdin))
+	if err != nil {
+		return err
+	}
+	cfg.Username = string(bytePassword)
+	fmt.Println()
+	return nil
+}
+
+func askPassword(cfg *Configuration) error {
+	fmt.Print("Enter Password: ")
+	bytePassword, err := term.ReadPassword(int(syscall.Stdin))
+	if err != nil {
+		return err
+	}
+	cfg.SetPassword(string(bytePassword))
+	fmt.Println()
 	return nil
 }
