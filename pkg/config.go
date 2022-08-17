@@ -18,11 +18,11 @@ var (
 )
 
 type Configuration struct {
-	Server      string
-	Database    string
-	Username    string
+	Server      string `mapstructure:"server"`
+	Database    string `mapstructure:"database"`
+	User        string `mapstructure:"user"`
 	password    string
-	Constraints map[string]geno.Constraints
+	Constraints map[string]geno.Constraints `mapstructure:"constraints"`
 }
 
 func ConfigFromBytes(raw []byte) (cfg Configuration, err error) {
@@ -103,15 +103,15 @@ func (cfg *Configuration) ValidateUsername() error {
 		matched bool
 		err     error
 	)
-	matched, err = regexp.MatchString(`^[[:alnum:]]`, cfg.Username) // should match
+	matched, err = regexp.MatchString(`^[[:alnum:]]`, cfg.User) // should match
 	if err != nil || !matched {
 		return errUsernameMisconfig
 	}
-	matched, err = regexp.MatchString(`[^a-zA-Z0-9.-]`, cfg.Username) // should not match
+	matched, err = regexp.MatchString(`[^a-zA-Z0-9.-]`, cfg.User) // should not match
 	if err != nil || matched {
 		return errUsernameMisconfig
 	}
-	matched, err = regexp.MatchString(`^_`, cfg.Username) // should not match
+	matched, err = regexp.MatchString(`^_`, cfg.User) // should not match
 	if err != nil || matched {
 		return errUsernameMisconfig
 	}
@@ -147,7 +147,7 @@ func (cfg *Configuration) ValidateWithAttempts() error {
 	if cfg.Server == "" {
 		return errors.New("server location must be provided either via a configuration file (--config) or via the server flag (-s, --server)")
 	}
-	for cfg.Username == "" {
+	for cfg.User == "" {
 		if !triedToGetUsername {
 			triedToGetUsername = true
 			fmt.Println("Username cannot be blank. Set it below, via a configuration file (--config) or via the username flag (-u, --uesrname)")
@@ -182,7 +182,7 @@ func askUsername(cfg *Configuration) error {
 	if err != nil {
 		return err
 	}
-	cfg.Username = string(bytePassword)
+	cfg.User = string(bytePassword)
 	fmt.Println()
 	return nil
 }
