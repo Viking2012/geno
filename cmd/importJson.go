@@ -29,6 +29,7 @@ import (
 	"github.com/Viking2012/geno/geno"
 	"github.com/Viking2012/geno/pkg"
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
+	"github.com/schollz/progressbar/v3"
 	"github.com/spf13/cobra"
 )
 
@@ -87,23 +88,26 @@ The file must be in the format:
 
 		query = geno.NewQuery(&driver, &constraints)
 
+		bar := progressbar.Default(int64(len(graph.Nodes)), "nodes")
 		for _, node := range graph.Nodes {
 			summary, err := query.MergeNode(cfg.Database, node)
 			if err != nil {
 				return err
 			}
+			bar.Add(1)
 			for _, l := range node.Labels {
 				nodesFoundCount[l]++
 				nodesMergedCount[l] += summary.Counters().NodesCreated()
 			}
 
 		}
-
+		bar = progressbar.Default(int64(len(graph.Relationships)), "rels ")
 		for _, rel := range graph.Relationships {
 			summary, err := query.MergeRelationship(cfg.Database, rel)
 			if err != nil {
 				return err
 			}
+			bar.Add(1)
 			relsFoundCount[rel.Label]++
 			relsMergedCount[rel.Label] += summary.Counters().RelationshipsCreated()
 		}
