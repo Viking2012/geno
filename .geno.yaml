@@ -1,7 +1,7 @@
 ---
-server: localhost:7687
-database: geno
-user: geno
+server: localhost:7687 # server location, defaults to localhost and standard neo4j port
+database: geno # developed with a "geno" database in neo4j Community Edition
+user: geno # neo4j user authorized to access the database
 constraints:
     # Example of constraints for a database
     # -------------------------------------
@@ -26,43 +26,20 @@ constraints:
     #           Properties:
     geno:
         NodeUniqueness:
-            - Label: Address
+            - Label: NodeTypeA
               Properties:
-                  - Value
-            - Label: Bank
+                  - Prop1
+            - Label: NodeTypeB
               Properties:
-                  - Value
-            - Label: Customer
-              Properties:
-                  - Key
-            - Label: Email
-              Properties:
-                  - Value
-            - Label: Fax
-              Properties:
-                  - Value
-            - Label: GUID
-              Properties:
-                  - Value
-            - Label: Name
-              Properties:
-                  - Value
-            - Label: Phone
-              Properties:
-                  - Value
-            - Label: TaxCode
-              Properties:
-                  - Value
-            - Label: Vendor
-              Properties:
-                  - Key
+                  - Prop1
+                  - Prop2
         NodeKeys:
-            - Customer:
-                  - Database
-                  - KUNNR
-            - Vendor:
-                  - Database
-                  - LIFNR
+            - TypeC:
+                  - Prop1
+                  - Prop2
+            - TypeD:
+                  - Prop3
+                  - Prop4
         NodePropertyExistence:
         RelationshipUniqueness:
         RelationshipKeys:
