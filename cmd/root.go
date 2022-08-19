@@ -49,6 +49,7 @@ This CLI can import and export data from json, yaml, and raw cypher queries`,
 		}
 		return nil
 	},
+	Version: "0.1.0-alpha",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
