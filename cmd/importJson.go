@@ -112,11 +112,11 @@ The file must be in the format:
 			relsMergedCount[rel.Label] += summary.Counters().RelationshipsCreated()
 		}
 
-		fmt.Println("nodes report:")
+		fmt.Println("nodes report:", printMapSum(nodesMergedCount), "of", printMapSum(nodesFoundCount), "merged")
 		for lab, cnt := range nodesFoundCount {
 			fmt.Println("\tNode type:", lab, " found:", cnt, " merged:", nodesMergedCount[lab])
 		}
-		fmt.Println("relationships report:")
+		fmt.Println("relationships report:", printMapSum(relsMergedCount), "of", printMapSum(relsFoundCount), "merged")
 		for lab, cnt := range relsFoundCount {
 			fmt.Println("\tNode type:", lab, " found:", cnt, " merged:", relsMergedCount[lab])
 		}
@@ -138,4 +138,12 @@ func init() {
 	// jsonCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	jsonCmd.Flags().StringVarP(&fPath, "filepath", "f", "", "path to the json file")
 	jsonCmd.Flags().BoolVarP(&refreshConstraints, "refresh-constraints", "r", false, "attempt to read constraints direct from the database")
+}
+
+func printMapSum(m map[string]int) int {
+	var s int
+	for _, v := range m {
+		s += v
+	}
+	return s
 }
